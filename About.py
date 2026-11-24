@@ -21,7 +21,7 @@ class AboutWindow(QWidget):
         self.linkedin_label.setStyleSheet("font-size: 14px; font-weight: bold;")
         self.linkedin_label.setOpenExternalLinks(True)
 
-        self.github_label = QLabel('<a href="https://github.com/roi-dyna/exercise4_grades">My GitHub Repository</a>', self)        
+        self.github_label = QLabel('<a href="https://https://github.com/roi-dyna/exercise5">My GitHub Repository</a>', self)        
         self.github_label.setGeometry(25, 120, 300, 25)
         self.github_label.setStyleSheet("font-size: 14px; font-weight: bold;")
         self.github_label.setOpenExternalLinks(True)
