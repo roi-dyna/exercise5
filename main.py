@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
+from Body import Body
 import os
 from About import AboutWindow
 from GraphWindow import GraphWindow
@@ -10,6 +11,20 @@ class HeatTransfer(QWidget):
         super().__init__()
         self.about_window = AboutWindow()
         self.graph_window = GraphWindow()
+
+        self.body1 = None
+        self.body2 = None
+        self.sigma = 1.0
+        self.dt = 0.1
+        self.elapsed_time = 0.0
+
+        self.time_history = []
+        self.body1_temp_history = []
+        self.body2_temp_history = []
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer_method)
+
         self.setupUI()
 
     def setupUI(self):
@@ -20,6 +35,7 @@ class HeatTransfer(QWidget):
         self.start_button.setGeometry(20, 20, 120, 35)
         self.start_button.setCheckable(True)
         self.start_button.setObjectName('primaryBtn')
+        self.start_button.clicked.connect(self.start_stop_button_method)
 
         self.graphs_button = QPushButton('Graphs', self)
         self.graphs_button.setGeometry(155, 20, 120, 35)
@@ -139,7 +155,7 @@ class HeatTransfer(QWidget):
         red = int((temp / 200) * 255)
         red = max(0, min(255, red))
         box.setStyleSheet(f'background-color: rgb({red}, 0, 0); border-radius: 12px; border: 2px solid #1e293b;')
-        
+
     def left_temperature_changed(self):
         temp = self.left_slider.value()
         self.left_temp_spin.setValue(temp)
@@ -149,6 +165,61 @@ class HeatTransfer(QWidget):
         temp = self.right_slider.value()
         self.right_temp_spin.setValue(temp)
         self.update_body_color(self.body2_box, temp)
+
+    def start_stop_button_method(self):
+        if self.start_button.isChecked():
+            self.start_button.setText('Stop')
+
+            m1 = self.left_mass_spin.value()
+            c1 = self.left_cap_spin.value()
+            t1 = self.left_temp_spin.value()
+
+            m2 = self.right_mass_spin.value()
+            c2 = self.right_cap_spin.value()
+            t2 = self.right_temp_spin.value()
+
+            self.sigma = self.k_spin.value()
+
+            self.body1 = Body(m1, c1, t1)
+            self.body2 = Body(m2, c2, t2)
+
+            self.elapsed_time = 0.0
+            self.time_history = [0.0]
+            self.body1_temp_history = [t1]
+            self.body2_temp_history = [t2]
+
+            self.timer.start(int(self.dt * 1000))
+        else:
+            self.start_button.setText('Start')
+            self.timer.stop()
+
+    def timer_method(self):
+        t1 = self.body1.temperature
+        t2 = self.body2.temperature
+
+
+        i1 = self.sigma * (t2 - t1)
+        i2 = self.sigma * (t1 - t2)
+
+        dq1 = i1 * self.dt
+        dq2 = i2 * self.dt
+
+        new_t1 = self.body1.add_heat(dq1)
+        new_t2 = self.body2.add_heat(dq2)
+
+
+        self.elapsed_time += self.dt
+        self.time_history.append(self.elapsed_time)
+        self.body1_temp_history.append(new_t1)
+        self.body2_temp_history.append(new_t2)
+
+        self.left_slider.setValue(round(new_t1))
+        self.left_temp_spin.setValue(new_t1)
+        self.update_body_color(self.body1_box, new_t1)
+
+        self.right_slider.setValue(round(new_t2))
+        self.right_temp_spin.setValue(new_t2)
+        self.update_body_color(self.body2_box, new_t2)
 
 
 if __name__ == '__main__':
