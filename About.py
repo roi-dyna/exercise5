@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QApplication, QWidget, QLabel
 from PySide6.QtGui import QPixmap
+import os
 
 class AboutWindow(QWidget):
     def __init__(self):

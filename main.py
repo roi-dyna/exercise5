@@ -68,7 +68,6 @@ class HeatTransfer(QWidget):
         self.left_temp_spin.setValue(200)
         self.left_temp_spin.setSuffix(' °C')
         self.left_temp_spin.setReadOnly(True)
-        self.left_temp_spin.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
 
         self.mass1_label = QLabel('Mass:', self)
         self.mass1_label.setGeometry(60, 315, 85, 30)
@@ -118,7 +117,6 @@ class HeatTransfer(QWidget):
         self.right_temp_spin.setValue(20)
         self.right_temp_spin.setSuffix(' °C')
         self.right_temp_spin.setReadOnly(True)
-        self.right_temp_spin.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
 
         self.mass2_label = QLabel('Mass:', self)
         self.mass2_label.setGeometry(515, 315, 85, 30)
