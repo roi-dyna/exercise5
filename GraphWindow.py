@@ -2,8 +2,6 @@ from PySide6.QtWidgets import QWidget, QPushButton, QComboBox, QFileDialog
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.figure import Figure
 import os
-import sys
-import subprocess
 
 
 class GraphWindow(QWidget):
