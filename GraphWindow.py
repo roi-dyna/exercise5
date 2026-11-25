@@ -96,9 +96,4 @@ class GraphWindow(QWidget):
             for i in range(len(times)):
                 f.write(f'{times[i]:.2f},{t1_list[i]:.2f},{t2_list[i]:.2f}\n')
 
-        if os.name == 'nt':
-            os.startfile(filename)
-        elif sys.platform == 'darwin':
-            subprocess.call(['open', filename])
-        else:
-            subprocess.call(['xdg-open', filename])
+        os.startfile(filename)

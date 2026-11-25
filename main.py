@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider,QAbstractSpinBox
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider
 from PySide6.QtCore import Qt, QTimer
 from Body import Body
 import os
