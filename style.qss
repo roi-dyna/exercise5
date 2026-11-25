@@ -59,3 +59,11 @@ QComboBox {
     border-radius: 6px;
     padding: 4px 8px;
 }
+QLabel#jokeBadge {
+    background-color: #fef3c7;
+    color: #92400e;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid #f59e0b;
+    border-radius: 6px;
+}

@@ -62,6 +62,7 @@ class HeatTransfer(QWidget):
 
         self.temp1_label = QLabel('Temp:', self)
         self.temp1_label.setGeometry(60, 275, 85, 30)
+
         self.left_temp_spin = QDoubleSpinBox(self)
         self.left_temp_spin.setGeometry(150, 275, 130, 30)
         self.left_temp_spin.setRange(0, 200)
@@ -71,6 +72,7 @@ class HeatTransfer(QWidget):
 
         self.mass1_label = QLabel('Mass:', self)
         self.mass1_label.setGeometry(60, 315, 85, 30)
+
         self.left_mass_spin = QDoubleSpinBox(self)
         self.left_mass_spin.setGeometry(150, 315, 130, 30)
         self.left_mass_spin.setRange(0.01, 100000)
@@ -79,6 +81,7 @@ class HeatTransfer(QWidget):
 
         self.cap1_label = QLabel('Heat Cap:', self)
         self.cap1_label.setGeometry(60, 355, 85, 30)
+
         self.left_cap_spin = QDoubleSpinBox(self)
         self.left_cap_spin.setGeometry(150, 355, 130, 30)
         self.left_cap_spin.setRange(0.01, 100000)
@@ -111,6 +114,7 @@ class HeatTransfer(QWidget):
 
         self.temp2_label = QLabel('Temp:', self)
         self.temp2_label.setGeometry(515, 275, 85, 30)
+
         self.right_temp_spin = QDoubleSpinBox(self)
         self.right_temp_spin.setGeometry(605, 275, 135, 30)
         self.right_temp_spin.setRange(0, 200)
@@ -120,6 +124,7 @@ class HeatTransfer(QWidget):
 
         self.mass2_label = QLabel('Mass:', self)
         self.mass2_label.setGeometry(515, 315, 85, 30)
+
         self.right_mass_spin = QDoubleSpinBox(self)
         self.right_mass_spin.setGeometry(605, 315, 135, 30)
         self.right_mass_spin.setRange(0.01, 100000)
@@ -128,11 +133,17 @@ class HeatTransfer(QWidget):
 
         self.cap2_label = QLabel('Heat Cap:', self)
         self.cap2_label.setGeometry(515, 355, 85, 30)
+
         self.right_cap_spin = QDoubleSpinBox(self)
         self.right_cap_spin.setGeometry(605, 355, 135, 30)
         self.right_cap_spin.setRange(0.01, 100000)
         self.right_cap_spin.setValue(0.5)
         self.right_cap_spin.setSuffix(' J/kg*°C')
+
+        self.joke_label = QLabel('😉  i_heat ≠ 1.23  😉', self)
+        self.joke_label.setGeometry(560, 400, 220, 28)
+        self.joke_label.setAlignment(Qt.AlignCenter)
+        self.joke_label.setObjectName('jokeBadge')
 
         qss_path = os.path.join(os.path.dirname(__file__), 'style.qss')
 
