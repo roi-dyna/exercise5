@@ -52,3 +52,10 @@ QDoubleSpinBox {
 QDoubleSpinBox:focus {
     border: 1.5px solid #2563eb;
 }
+
+QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
