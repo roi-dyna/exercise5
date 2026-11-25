@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider, QComboBox
 from PySide6.QtCore import Qt, QTimer
 from Body import Body
 import os
@@ -103,6 +103,15 @@ class HeatTransfer(QWidget):
         self.k_spin.setRange(0.01, 100000)
         self.k_spin.setValue(5.0)
         self.k_spin.setSuffix(' J/s*°C')
+
+        self.speed_label = QLabel('Speed:', self)
+        self.speed_label.setGeometry(325, 225, 150, 25)
+        self.speed_label.setAlignment(Qt.AlignCenter)
+
+        self.speed_combo = QComboBox(self)
+        self.speed_combo.setGeometry(330, 255, 140, 30)
+        self.speed_combo.addItems(['x1', 'x2', 'x5', 'x10'])
+        self.speed_combo.currentTextChanged.connect(self.speed_changed)
 
         self.time_label = QLabel('Time: 0.0 s', self)
         self.time_label.setGeometry(325, 315, 150, 30)
@@ -209,7 +218,7 @@ class HeatTransfer(QWidget):
             self.body1_temp_history = [t1]
             self.body2_temp_history = [t2]
 
-            self.timer.start(int(self.dt * 1000))
+            self.timer.start(self.get_timer_interval())
         else:
             self.start_button.setText('Start')
             self.timer.stop()
@@ -263,6 +272,17 @@ class HeatTransfer(QWidget):
         self.right_mass_spin.setValue(100)
         self.right_cap_spin.setValue(0.5)
         self.k_spin.setValue(5.0)
+
+        self.speed_combo.setCurrentText('x1')
+
+    def get_timer_interval(self):
+        speeds = {'x1': 1, 'x2': 2, 'x5': 5, 'x10': 10}
+        factor = speeds[self.speed_combo.currentText()]
+        return int((self.dt * 1000) / factor)
+
+    def speed_changed(self):
+        if self.timer.isActive():
+            self.timer.setInterval(self.get_timer_interval())
 
 
 if __name__ == '__main__':
