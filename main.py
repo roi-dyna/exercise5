@@ -119,14 +119,36 @@ class HeatTransfer(QWidget):
         self.right_cap_spin.setSuffix(' J/kg*°C')
 
         qss_path = os.path.join(os.path.dirname(__file__), 'style.qss')
+
         with open(qss_path, 'r') as f:
             self.setStyleSheet(f.read())
+
+        self.left_slider.valueChanged.connect(self.left_temperature_changed)
+        self.right_slider.valueChanged.connect(self.right_temperature_changed)
+
+        self.left_temperature_changed()
+        self.right_temperature_changed()
 
     def show_about(self):
         self.about_window.show()
 
     def show_graphs(self):
         self.graph_window.show()
+
+    def update_body_color(self, box, temp):
+        red = int((temp / 200) * 255)
+        red = max(0, min(255, red))
+        box.setStyleSheet(f'background-color: rgb({red}, 0, 0); border-radius: 12px; border: 2px solid #1e293b;')
+        
+    def left_temperature_changed(self):
+        temp = self.left_slider.value()
+        self.left_temp_spin.setValue(temp)
+        self.update_body_color(self.body1_box, temp)
+
+    def right_temperature_changed(self):
+        temp = self.right_slider.value()
+        self.right_temp_spin.setValue(temp)
+        self.update_body_color(self.body2_box, temp)
 
 
 if __name__ == '__main__':
