@@ -29,7 +29,7 @@ class AboutWindow(QWidget):
         self.pic_label = QLabel(self)
         self.pic_label.setGeometry(25, 160, 300, 300)
         self.pic_label.setStyleSheet("border: 2px solid #bdc3c7;")
-        image = QPixmap('image.jpg').scaled(300, 300)
+        image = QPixmap(os.path.join(os.path.dirname(__file__), 'image.jpg')).scaled(300, 300)
         self.pic_label.setPixmap(image)
 
 
