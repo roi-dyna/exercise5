@@ -29,7 +29,7 @@ class HeatTransfer(QWidget):
 
     def setupUI(self):
         self.setWindowTitle('Heat Transfer Simulation')
-        self.setGeometry(100, 100, 800, 440)
+        self.setGeometry(100, 100, 800, 490)
 
         self.start_button = QPushButton('Start', self)
         self.start_button.setGeometry(20, 20, 120, 35)
@@ -41,6 +41,11 @@ class HeatTransfer(QWidget):
         self.graphs_button.setGeometry(155, 20, 120, 35)
         self.graphs_button.setObjectName('secondaryBtn')
         self.graphs_button.clicked.connect(self.show_graphs)
+
+        self.reset_button = QPushButton('Reset', self)
+        self.reset_button.setGeometry(290, 20, 100, 35)
+        self.reset_button.setObjectName('secondaryBtn')
+        self.reset_button.clicked.connect(self.reset_simulation)
 
         self.about_button = QPushButton('About', self)
         self.about_button.setGeometry(660, 20, 120, 35)
@@ -99,6 +104,10 @@ class HeatTransfer(QWidget):
         self.k_spin.setValue(5.0)
         self.k_spin.setSuffix(' J/s*°C')
 
+        self.time_label = QLabel('Time: 0.0 s', self)
+        self.time_label.setGeometry(325, 315, 150, 30)
+        self.time_label.setAlignment(Qt.AlignCenter)
+
         self.body2_title = QLabel('Body 2', self)
         self.body2_title.setGeometry(560, 75, 140, 25)
         self.body2_title.setAlignment(Qt.AlignCenter)
@@ -141,7 +150,7 @@ class HeatTransfer(QWidget):
         self.right_cap_spin.setSuffix(' J/kg*°C')
 
         self.joke_label = QLabel('😉  i_heat ≠ 1.23  😉', self)
-        self.joke_label.setGeometry(560, 400, 220, 28)
+        self.joke_label.setGeometry(560, 445, 220, 28)
         self.joke_label.setAlignment(Qt.AlignCenter)
         self.joke_label.setObjectName('jokeBadge')
 
@@ -195,6 +204,7 @@ class HeatTransfer(QWidget):
             self.body2 = Body(m2, c2, t2)
 
             self.elapsed_time = 0.0
+            self.time_label.setText('Time: 0.0 s')
             self.time_history = [0.0]
             self.body1_temp_history = [t1]
             self.body2_temp_history = [t2]
@@ -220,6 +230,7 @@ class HeatTransfer(QWidget):
 
 
         self.elapsed_time += self.dt
+        self.time_label.setText(f'Time: {self.elapsed_time:.1f} s')
         self.time_history.append(self.elapsed_time)
         self.body1_temp_history.append(new_t1)
         self.body2_temp_history.append(new_t2)
@@ -231,6 +242,27 @@ class HeatTransfer(QWidget):
         self.right_slider.setValue(round(new_t2))
         self.right_temp_spin.setValue(new_t2)
         self.update_body_color(self.body2_box, new_t2)
+
+    def reset_simulation(self):
+        self.timer.stop()
+        self.start_button.setChecked(False)
+        self.start_button.setText('Start')
+
+        self.elapsed_time = 0.0
+        self.time_label.setText('Time: 0.0 s')
+
+        self.time_history = []
+        self.body1_temp_history = []
+        self.body2_temp_history = []
+
+        self.left_slider.setValue(200)
+        self.right_slider.setValue(20)
+
+        self.left_mass_spin.setValue(100)
+        self.left_cap_spin.setValue(0.5)
+        self.right_mass_spin.setValue(100)
+        self.right_cap_spin.setValue(0.5)
+        self.k_spin.setValue(5.0)
 
 
 if __name__ == '__main__':
