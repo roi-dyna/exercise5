@@ -25,6 +25,20 @@ class HeatTransfer(QWidget):
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_method)
 
+        self.materials = {
+            'Custom': None,
+            'Gold': 129.0,
+            'Copper': 385.0,
+            'Iron / Steel': 450.0,
+            'Water': 4186.0,
+            'Diamond': 509.0,
+            'Glass': 840.0,
+            'Aluminum': 900.0,
+            'Wood': 1700.0,
+            'Rubber': 2000.0,
+            'Lithium': 3580.0
+        }
+
         self.setupUI()
 
     def setupUI(self):
@@ -93,6 +107,14 @@ class HeatTransfer(QWidget):
         self.left_cap_spin.setValue(0.5)
         self.left_cap_spin.setSuffix(' J/kg*°C')
 
+        self.mat1_label = QLabel('Material:', self)
+        self.mat1_label.setGeometry(60, 395, 85, 30)
+        self.left_material_combo = QComboBox(self)
+        self.left_material_combo.setGeometry(150, 395, 130, 30)
+        self.left_material_combo.addItems(list(self.materials.keys()))
+        self.left_material_combo.currentTextChanged.connect(self.left_material_changed)
+        self.left_cap_spin.valueChanged.connect(self.left_cap_manual_changed)
+
 
         self.k_label = QLabel('Conductivity (k):', self)
         self.k_label.setGeometry(325, 145, 150, 25)
@@ -157,6 +179,14 @@ class HeatTransfer(QWidget):
         self.right_cap_spin.setRange(0.01, 100000)
         self.right_cap_spin.setValue(0.5)
         self.right_cap_spin.setSuffix(' J/kg*°C')
+
+        self.mat2_label = QLabel('Material:', self)
+        self.mat2_label.setGeometry(515, 395, 85, 30)
+        self.right_material_combo = QComboBox(self)
+        self.right_material_combo.setGeometry(605, 395, 135, 30)
+        self.right_material_combo.addItems(list(self.materials.keys()))
+        self.right_material_combo.currentTextChanged.connect(self.right_material_changed)
+        self.right_cap_spin.valueChanged.connect(self.right_cap_manual_changed)
 
         self.joke_label = QLabel('😉  i_heat ≠ 1.23  😉', self)
         self.joke_label.setGeometry(560, 445, 220, 28)
@@ -275,6 +305,9 @@ class HeatTransfer(QWidget):
 
         self.speed_combo.setCurrentText('x1')
 
+        self.left_material_combo.setCurrentText('Custom')
+        self.right_material_combo.setCurrentText('Custom')
+
     def get_timer_interval(self):
         speeds = {'x1': 1, 'x2': 2, 'x5': 5, 'x10': 10}
         factor = speeds[self.speed_combo.currentText()]
@@ -283,6 +316,26 @@ class HeatTransfer(QWidget):
     def speed_changed(self):
         if self.timer.isActive():
             self.timer.setInterval(self.get_timer_interval())
+
+    def left_material_changed(self):
+        mat = self.left_material_combo.currentText()
+        if self.materials[mat] is not None:
+            self.left_cap_spin.setValue(self.materials[mat])
+
+    def left_cap_manual_changed(self):
+        mat = self.left_material_combo.currentText()
+        if self.materials[mat] != self.left_cap_spin.value():
+            self.left_material_combo.setCurrentText('Custom')
+
+    def right_material_changed(self):
+        mat = self.right_material_combo.currentText()
+        if self.materials[mat] is not None:
+            self.right_cap_spin.setValue(self.materials[mat])
+
+    def right_cap_manual_changed(self):
+        mat = self.right_material_combo.currentText()
+        if self.materials[mat] != self.right_cap_spin.value():
+            self.right_material_combo.setCurrentText('Custom')
 
 
 if __name__ == '__main__':
