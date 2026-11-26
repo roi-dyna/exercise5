@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider, QComboBox
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QDoubleSpinBox, QSlider, QComboBox,QProgressBar
 from PySide6.QtCore import Qt, QTimer
 from Body import Body
 import os
@@ -17,6 +17,8 @@ class HeatTransfer(QWidget):
         self.sigma = 1.0
         self.dt = 0.1
         self.elapsed_time = 0.0
+
+        self.initial_temp_diff = 0.0
 
         self.time_history = []
         self.body1_temp_history = []
@@ -139,6 +141,15 @@ class HeatTransfer(QWidget):
         self.time_label.setGeometry(325, 315, 150, 30)
         self.time_label.setAlignment(Qt.AlignCenter)
 
+        self.eq_label = QLabel('Equilibrium:', self)
+        self.eq_label.setGeometry(315, 360, 170, 25)
+        self.eq_label.setAlignment(Qt.AlignCenter)
+
+        self.eq_progress = QProgressBar(self)
+        self.eq_progress.setGeometry(315, 390, 170, 25)
+        self.eq_progress.setRange(0, 100)
+        self.eq_progress.setValue(0)
+
         self.body2_title = QLabel('Body 2', self)
         self.body2_title.setGeometry(560, 75, 140, 25)
         self.body2_title.setAlignment(Qt.AlignCenter)
@@ -242,6 +253,12 @@ class HeatTransfer(QWidget):
             self.body1 = Body(m1, c1, t1)
             self.body2 = Body(m2, c2, t2)
 
+            self.initial_temp_diff = abs(self.body1.temperature - self.body2.temperature)
+            if self.initial_temp_diff == 0:
+                self.eq_progress.setValue(100)
+            else:
+                self.eq_progress.setValue(0)
+
             self.elapsed_time = 0.0
             self.time_label.setText('Time: 0.0 s')
             self.time_history = [0.0]
@@ -257,6 +274,16 @@ class HeatTransfer(QWidget):
         t1 = self.body1.temperature
         t2 = self.body2.temperature
 
+        if self.initial_temp_diff > 0:
+            current_diff = abs(t1 - t2)
+            progress = int((1 - current_diff / self.initial_temp_diff) * 100)
+            if progress < 0:
+                progress = 0
+            elif progress > 100:
+                progress = 100
+            self.eq_progress.setValue(progress)
+        else:
+            self.eq_progress.setValue(100)
 
         i1 = self.sigma * (t2 - t1)
         i2 = self.sigma * (t1 - t2)
@@ -307,6 +334,9 @@ class HeatTransfer(QWidget):
 
         self.left_material_combo.setCurrentText('Custom')
         self.right_material_combo.setCurrentText('Custom')
+
+        self.initial_temp_diff = 0.0
+        self.eq_progress.setValue(0)
 
     def get_timer_interval(self):
         speeds = {'x1': 1, 'x2': 2, 'x5': 5, 'x10': 10}
